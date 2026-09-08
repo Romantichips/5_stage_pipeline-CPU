@@ -14,15 +14,15 @@ module myCPU (
     output wire [31:0]  Bus_addr,
     input  wire [31:0]  Bus_rdata,
     output wire         Bus_wen,
-    output wire [31:0]  Bus_wdata
+    output wire [31:0]  Bus_wdata,
 
 //`ifdef RUN_TRACE
 //    ,// Debug Interface
-//    output wire         debug_wb_have_inst,
-//    output wire [31:0]  debug_wb_pc,
-//    output               debug_wb_ena,
-//    output wire [ 4:0]  debug_wb_reg,
-//    output wire [31:0]  debug_wb_value
+    output wire         debug_wb_have_inst,
+    output wire [31:0]  debug_wb_pc,
+    output               debug_wb_ena,
+    output wire [ 4:0]  debug_wb_reg,
+    output wire [31:0]  debug_wb_value
 //`endif
 );
 //trace
@@ -99,7 +99,7 @@ wire id_rf1_used;
 wire id_rf2_used;
 
 wire branched;
-// TODO: 完成你自己的CPU设计
+// TODO: 完成你自己的单周期CPU设计
 NPC U_NPC(
     .rst(cpu_rst),
     .PC(if_pc),
@@ -158,8 +158,8 @@ Control U_Control(
     .id_rf1_used(id_rf1_used),
     .id_rf2_used(id_rf2_used)
     
-//    ,//trace
-//    .have_inst(have_inst_ID)
+    ,//trace
+    .have_inst(have_inst_ID)
 );
 
 RegFile U_RegFile(
@@ -223,11 +223,11 @@ ID_EX U_ID_EX(
     .ex_npc_op     (ex_npc_op    )
     
 
-//    ,//trace
-//    .pc_i        (id_pc         ),
-//    .pc_o        (pc_EX         ),
-//    .have_inst_i (have_inst_ID  ),
-//    .have_inst_o (have_inst_EX  )
+    ,//trace
+    .pc_i        (id_pc         ),
+    .pc_o        (pc_EX         ),
+    .have_inst_i (have_inst_ID  ),
+    .have_inst_o (have_inst_EX  )
 );
 
 ALU U_ALU(
@@ -267,11 +267,11 @@ EX_MEM U_EX_MEM(
     .mem_wD_temp    (mem_wD_temp )
     
     
-//    ,//trace
-//    .pc_i        (pc_EX        ),
-//    .pc_o        (pc_MEM       ),
-//    .have_inst_i (have_inst_EX ),
-//    .have_inst_o (have_inst_MEM)
+    ,//trace
+    .pc_i        (pc_EX        ),
+    .pc_o        (pc_MEM       ),
+    .have_inst_i (have_inst_EX ),
+    .have_inst_o (have_inst_MEM)
 );
 
 MEM U_MEM(
@@ -303,11 +303,11 @@ MEM_WB U_MEM_WB(
     .wb_wR           (wb_wR),
     .wb_wD           (wb_wD)
     
-//    ,//trace
-//    .pc_i        (pc_MEM       ),
-//    .pc_o        (pc_WB        ),
-//    .have_inst_i (have_inst_MEM),
-//    .have_inst_o (have_inst_WB )
+    ,//trace
+    .pc_i        (pc_MEM       ),
+    .pc_o        (pc_WB        ),
+    .have_inst_i (have_inst_MEM),
+    .have_inst_o (have_inst_WB )
 );
 
 
@@ -347,11 +347,11 @@ Hazard_Detection U_Hazard_Detection(
 );
 //`ifdef RUN_TRACE
 //     Debug Interface
-//    assign debug_wb_have_inst = have_inst_WB;
-//    assign debug_wb_pc        = pc_WB;
-//    assign debug_wb_ena       = wb_rf_we;
-//    assign debug_wb_reg       = wb_wR;
-//    assign debug_wb_value     = wb_wD;
+    assign debug_wb_have_inst = have_inst_WB;
+    assign debug_wb_pc        = pc_WB;
+    assign debug_wb_ena       = wb_rf_we;
+    assign debug_wb_reg       = wb_wR;
+    assign debug_wb_value     = wb_wD;
 //`endif
 
 endmodule
